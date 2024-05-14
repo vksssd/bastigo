@@ -30,15 +30,15 @@ and [docgen](https://github.com/go-chi/docgen). We hope you enjoy it too!
 * **100% compatible with net/http** - use any http or middleware pkg in the ecosystem that is also compatible with `net/http`
 * **Designed for modular/composable APIs** - middlewares, inline middlewares, route groups and sub-router mounting
 * **Context control** - built on new `context` package, providing value chaining, cancellations and timeouts
-* **Robust** - in production at Pressly, Cloudflare, Heroku, 99Designs, and many others (see [discussion](https://github.com/go-chi/chi/issues/91))
+* **Robust** - in production at Pressly, Cloudflare, Heroku, 99Designs, and many others (see [discussion](https://github.com/vksssd/bastigo/issues/))
 * **Doc generation** - `docgen` auto-generates routing documentation from your source to JSON or Markdown
-* **Go.mod support** - as of v5, go.mod support (see [CHANGELOG](https://github.com/go-chi/chi/blob/master/CHANGELOG.md))
+* **Go.mod support** - as of v5, go.mod support (see [CHANGELOG](https://github.com/vksssd/bastigo/tree/main/CHANGELOG.md))
 * **No external dependencies** - plain ol' Go stdlib + net/http
 
 
 ## Examples
 
-See [_examples/](https://github.com/go-chi/chi/blob/master/_examples/) for a variety of examples.
+See [_examples/](https://github.com/vksssd/bastigo/tree/main/_examples/) for a variety of examples.
 
 
 **As easy as:**
@@ -66,10 +66,10 @@ func main() {
 **REST Preview:**
 
 Here is a little preview of how routing looks like with chi. Also take a look at the generated routing docs
-in JSON ([routes.json](https://github.com/go-chi/chi/blob/master/_examples/rest/routes.json)) and in
-Markdown ([routes.md](https://github.com/go-chi/chi/blob/master/_examples/rest/routes.md)).
+in JSON ([routes.json](https://github.com/vksssd/bastigo/tree/main/_examples/rest/routes.json)) and in
+Markdown ([routes.md](https://github.com/vksssd/bastigo/tree/main/_examples/rest/routes.md)).
 
-I highly recommend reading the source of the [examples](https://github.com/go-chi/chi/blob/master/_examples/) listed
+I highly recommend reading the source of the [examples](https://github.com/vksssd/bastigo/tree/main/_examples/) listed
 above, they will show you all the features of chi and serve as a good form of documentation.
 
 ```go
