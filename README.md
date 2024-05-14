@@ -1,11 +1,11 @@
-# <img alt="chi" src="https://cdn.rawgit.com/go-chi/chi/master/_examples/chi.svg" width="220" />
+# <img alt="chi" src="https://github.com/vksssd/bastigo/blob/main/_examples/basti-go.svg" width="220" />
 
 
 [![GoDoc Widget]][GoDoc]
 
-`chi` is a lightweight, idiomatic and composable router for building Go HTTP services. It's
+`BASTIGO` is a lightweight, idiomatic and composable router for building Go HTTP services. It's
 especially good at helping you write large REST API services that are kept maintainable as your
-project grows and changes. `chi` is built on the new `context` package introduced in Go 1.7 to
+project grows and changes. `bastiGO` is built on the new `context` package introduced in Go 1.7 to
 handle signaling, cancelation and request-scoped values across a handler chain.
 
 The focus of the project has been to seek out an elegant and comfortable design for writing
@@ -14,7 +14,7 @@ public API service, which in turn powers all of our client-side applications.
 
 The key considerations of chi's design are: project structure, maintainability, standard http
 handlers (stdlib-only), developer productivity, and deconstructing a large system into many small
-parts. The core router `github.com/go-chi/chi` is quite small (less than 1000 LOC), but we've also
+parts. The core router `github.com/vksssd/bastigo` is quite small (less than 1000 LOC), but we've also
 included some useful/optional subpackages: [middleware](/middleware), [render](https://github.com/go-chi/render)
 and [docgen](https://github.com/go-chi/docgen). We hope you enjoy it too!
 
