@@ -1,22 +1,22 @@
-# <img alt="bastigo" src="https://cdn.rawgit.com/go-bastigo/bastigo/master/_examples/bastigo.svg" width="220" />
+# <img alt="chi" src="https://cdn.rawgit.com/go-chi/chi/master/_examples/chi.svg" width="220" />
 
 
 [![GoDoc Widget]][GoDoc]
 
-`bastigo` is a lightweight, idiomatic and composable router for building Go HTTP services. It's
+`chi` is a lightweight, idiomatic and composable router for building Go HTTP services. It's
 especially good at helping you write large REST API services that are kept maintainable as your
-project grows and changes. `bastigo` is built on the new `context` package introduced in Go 1.7 to
+project grows and changes. `chi` is built on the new `context` package introduced in Go 1.7 to
 handle signaling, cancelation and request-scoped values across a handler chain.
 
 The focus of the project has been to seek out an elegant and comfortable design for writing
 REST API servers, written during the development of the Pressly API service that powers our
 public API service, which in turn powers all of our client-side applications.
 
-The key considerations of bastigo's design are: project structure, maintainability, standard http
+The key considerations of chi's design are: project structure, maintainability, standard http
 handlers (stdlib-only), developer productivity, and deconstructing a large system into many small
-parts. The core router `github.com/go-bastigo/bastigo` is quite small (less than 1000 LOC), but we've also
-included some useful/optional subpackages: [middleware](/middleware), [render](https://github.com/go-bastigo/render)
-and [docgen](https://github.com/go-bastigo/docgen). We hope you enjoy it too!
+parts. The core router `github.com/go-chi/chi` is quite small (less than 1000 LOC), but we've also
+included some useful/optional subpackages: [middleware](/middleware), [render](https://github.com/go-chi/render)
+and [docgen](https://github.com/go-chi/docgen). We hope you enjoy it too!
 
 ## Install
 
@@ -25,20 +25,20 @@ and [docgen](https://github.com/go-bastigo/docgen). We hope you enjoy it too!
 
 ## Features
 
-* **Lightweight** - cloc'd in ~1000 LOC for the bastigo router
+* **Lightweight** - cloc'd in ~1000 LOC for the chi router
 * **Fast** - yes, see [benchmarks](#benchmarks)
 * **100% compatible with net/http** - use any http or middleware pkg in the ecosystem that is also compatible with `net/http`
 * **Designed for modular/composable APIs** - middlewares, inline middlewares, route groups and sub-router mounting
 * **Context control** - built on new `context` package, providing value chaining, cancellations and timeouts
-* **Robust** - in production at Pressly, Cloudflare, Heroku, 99Designs, and many others (see [discussion](https://github.com/go-bastigo/bastigo/issues/91))
+* **Robust** - in production at Pressly, Cloudflare, Heroku, 99Designs, and many others (see [discussion](https://github.com/go-chi/chi/issues/91))
 * **Doc generation** - `docgen` auto-generates routing documentation from your source to JSON or Markdown
-* **Go.mod support** - as of v5, go.mod support (see [CHANGELOG](https://github.com/go-bastigo/bastigo/blob/master/CHANGELOG.md))
+* **Go.mod support** - as of v5, go.mod support (see [CHANGELOG](https://github.com/go-chi/chi/blob/master/CHANGELOG.md))
 * **No external dependencies** - plain ol' Go stdlib + net/http
 
 
 ## Examples
 
-See [_examples/](https://github.com/go-bastigo/bastigo/blob/master/_examples/) for a variety of examples.
+See [_examples/](https://github.com/go-chi/chi/blob/master/_examples/) for a variety of examples.
 
 
 **As easy as:**
@@ -54,7 +54,7 @@ import (
 )
 
 func main() {
-	r := bastigo.NewRouter()
+	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
@@ -65,12 +65,12 @@ func main() {
 
 **REST Preview:**
 
-Here is a little preview of how routing looks like with bastigo. Also take a look at the generated routing docs
-in JSON ([routes.json](https://github.com/go-bastigo/bastigo/blob/master/_examples/rest/routes.json)) and in
-Markdown ([routes.md](https://github.com/go-bastigo/bastigo/blob/master/_examples/rest/routes.md)).
+Here is a little preview of how routing looks like with chi. Also take a look at the generated routing docs
+in JSON ([routes.json](https://github.com/go-chi/chi/blob/master/_examples/rest/routes.json)) and in
+Markdown ([routes.md](https://github.com/go-chi/chi/blob/master/_examples/rest/routes.md)).
 
-I highly recommend reading the source of the [examples](https://github.com/go-bastigo/bastigo/blob/master/_examples/) listed
-above, they will show you all the features of bastigo and serve as a good form of documentation.
+I highly recommend reading the source of the [examples](https://github.com/go-chi/chi/blob/master/_examples/) listed
+above, they will show you all the features of chi and serve as a good form of documentation.
 
 ```go
 import (
@@ -81,7 +81,7 @@ import (
 )
 
 func main() {
-  r := bastigo.NewRouter()
+  r := chi.NewRouter()
 
   // A good base middleware stack
   r.Use(middleware.RequestID)
@@ -99,7 +99,7 @@ func main() {
   })
 
   // RESTy routes for "articles" resource
-  r.Route("/articles", func(r bastigo.Router) {
+  r.Route("/articles", func(r chi.Router) {
     r.With(paginate).Get("/", listArticles)                           // GET /articles
     r.With(paginate).Get("/{month}-{day}-{year}", listArticlesByDate) // GET /articles/01-16-2017
 
@@ -110,7 +110,7 @@ func main() {
     r.Get("/{articleSlug:[a-z-]+}", getArticleBySlug)                // GET /articles/home-is-toronto
 
     // Subrouters:
-    r.Route("/{articleID}", func(r bastigo.Router) {
+    r.Route("/{articleID}", func(r chi.Router) {
       r.Use(ArticleCtx)
       r.Get("/", getArticle)                                          // GET /articles/123
       r.Put("/", updateArticle)                                       // PUT /articles/123
@@ -126,7 +126,7 @@ func main() {
 
 func ArticleCtx(next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    articleID := bastigo.URLParam(r, "articleID")
+    articleID := chi.URLParam(r, "articleID")
     article, err := dbGetArticle(articleID)
     if err != nil {
       http.Error(w, http.StatusText(404), 404)
@@ -149,7 +149,7 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 
 // A completely separate router for administrator routes
 func adminRouter() http.Handler {
-  r := bastigo.NewRouter()
+  r := chi.NewRouter()
   r.Use(AdminOnly)
   r.Get("/", adminIndex)
   r.Get("/accounts", adminListAccounts)
@@ -172,13 +172,13 @@ func AdminOnly(next http.Handler) http.Handler {
 
 ## Router interface
 
-bastigo's router is based on a kind of [Patricia Radix trie](https://en.wikipedia.org/wiki/Radix_tree).
+chi's router is based on a kind of [Patricia Radix trie](https://en.wikipedia.org/wiki/Radix_tree).
 The router is fully compatible with `net/http`.
 
 Built on top of the tree is the `Router` interface:
 
 ```go
-// Router consisting of the core routing methods used by bastigo's Mux,
+// Router consisting of the core routing methods used by chi's Mux,
 // using only the standard net/http.
 type Router interface {
 	http.Handler
@@ -231,7 +231,7 @@ type Router interface {
 }
 
 // Routes interface adds two methods for router traversal, which is also
-// used by the github.com/go-bastigo/docgen package to generate documentation for Routers.
+// used by the github.com/go-chi/docgen package to generate documentation for Routers.
 type Routes interface {
 	// Routes returns the routing tree in an easily traversable structure.
 	Routes() []Route
@@ -248,16 +248,16 @@ type Routes interface {
 
 Each routing method accepts a URL `pattern` and chain of `handlers`. The URL pattern
 supports named params (ie. `/users/{userID}`) and wildcards (ie. `/admin/*`). URL parameters
-can be fetched at runtime by calling `bastigo.URLParam(r, "userID")` for named parameters
-and `bastigo.URLParam(r, "*")` for a wildcard parameter.
+can be fetched at runtime by calling `chi.URLParam(r, "userID")` for named parameters
+and `chi.URLParam(r, "*")` for a wildcard parameter.
 
 
 ### Middleware handlers
 
-bastigo's middlewares are just stdlib net/http middleware handlers. There is nothing special
+chi's middlewares are just stdlib net/http middleware handlers. There is nothing special
 about them, which means the router and all the tooling is designed to be compatible and
 friendly with any middleware in the community. This offers much better extensibility and reuse
-of packages and is at the heart of bastigo's purpose.
+of packages and is at the heart of chi's purpose.
 
 Here is an example of a standard net/http middleware where we assign a context key `"user"`
 the value of `"123"`. This middleware sets a hypothetical user identifier on the request
@@ -285,7 +285,7 @@ func MyMiddleware(next http.Handler) http.Handler {
 
 ### Request handlers
 
-bastigo uses standard net/http request handlers. This little snippet is an example of a http.Handler
+chi uses standard net/http request handlers. This little snippet is an example of a http.Handler
 func that reads a user identifier from the request context - hypothetically, identifying
 the user sending an authenticated request, validated+set by a previous middleware handler.
 
@@ -304,7 +304,7 @@ func MyRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 ### URL parameters
 
-bastigo's router parses and stores URL parameters right onto the request context. Here is
+chi's router parses and stores URL parameters right onto the request context. Here is
 an example of how to access URL params in your net/http handlers. And of course, middlewares
 are able to access the same information.
 
@@ -313,7 +313,7 @@ are able to access the same information.
 func MyRequestHandler(w http.ResponseWriter, r *http.Request) {
   // fetch the url parameter `"userID"` from the request of a matching
   // routing pattern. An example routing pattern could be: /users/{userID}
-  userID := bastigo.URLParam(r, "userID")
+  userID := chi.URLParam(r, "userID")
 
   // fetch `"key"` from the request context
   ctx := r.Context()
@@ -327,14 +327,14 @@ func MyRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 ## Middlewares
 
-bastigo comes equipped with an optional `middleware` package, providing a suite of standard
+chi comes equipped with an optional `middleware` package, providing a suite of standard
 `net/http` middlewares. Please note, any middleware in the ecosystem that is also compatible
-with `net/http` can be used with bastigo's mux.
+with `net/http` can be used with chi's mux.
 
 ### Core middlewares
 
 ----------------------------------------------------------------------------------------------------
-| bastigo/middleware Handler | description                                                             |
+| chi/middleware Handler | description                                                             |
 | :--------------------- | :---------------------------------------------------------------------- |
 | [AllowContentEncoding] | Enforces a whitelist of request Content-Encoding headers                |
 | [AllowContentType]     | Explicit whitelist of accepted request Content-Types                    |
@@ -361,61 +361,61 @@ with `net/http` can be used with bastigo's mux.
 | [WithValue]            | Short-hand middleware to set a key/value on the request context         |
 ----------------------------------------------------------------------------------------------------
 
-[AllowContentEncoding]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#AllowContentEncoding
-[AllowContentType]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#AllowContentType
-[BasicAuth]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#BasicAuth
-[Compress]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Compress
-[ContentCharset]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#ContentCharset
-[CleanPath]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#CleanPath
-[GetHead]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#GetHead
-[GetReqID]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#GetReqID
-[Heartbeat]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Heartbeat
-[Logger]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Logger
-[NoCache]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#NoCache
-[Profiler]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Profiler
-[RealIP]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#RealIP
-[Recoverer]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Recoverer
-[RedirectSlashes]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#RedirectSlashes
-[RequestLogger]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#RequestLogger
-[RequestID]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#RequestID
-[RouteHeaders]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#RouteHeaders
-[SetHeader]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#SetHeader
-[StripSlashes]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#StripSlashes
+[AllowContentEncoding]: https://pkg.go.dev/github.com/go-chi/chi/middleware#AllowContentEncoding
+[AllowContentType]: https://pkg.go.dev/github.com/go-chi/chi/middleware#AllowContentType
+[BasicAuth]: https://pkg.go.dev/github.com/go-chi/chi/middleware#BasicAuth
+[Compress]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Compress
+[ContentCharset]: https://pkg.go.dev/github.com/go-chi/chi/middleware#ContentCharset
+[CleanPath]: https://pkg.go.dev/github.com/go-chi/chi/middleware#CleanPath
+[GetHead]: https://pkg.go.dev/github.com/go-chi/chi/middleware#GetHead
+[GetReqID]: https://pkg.go.dev/github.com/go-chi/chi/middleware#GetReqID
+[Heartbeat]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Heartbeat
+[Logger]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Logger
+[NoCache]: https://pkg.go.dev/github.com/go-chi/chi/middleware#NoCache
+[Profiler]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Profiler
+[RealIP]: https://pkg.go.dev/github.com/go-chi/chi/middleware#RealIP
+[Recoverer]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Recoverer
+[RedirectSlashes]: https://pkg.go.dev/github.com/go-chi/chi/middleware#RedirectSlashes
+[RequestLogger]: https://pkg.go.dev/github.com/go-chi/chi/middleware#RequestLogger
+[RequestID]: https://pkg.go.dev/github.com/go-chi/chi/middleware#RequestID
+[RouteHeaders]: https://pkg.go.dev/github.com/go-chi/chi/middleware#RouteHeaders
+[SetHeader]: https://pkg.go.dev/github.com/go-chi/chi/middleware#SetHeader
+[StripSlashes]: https://pkg.go.dev/github.com/go-chi/chi/middleware#StripSlashes
 [Sunset]: https://pkg.go.dev/github.com/vksssd/bastiGO/middleware#Sunset
-[Throttle]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Throttle
-[ThrottleBacklog]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#ThrottleBacklog
-[ThrottleWithOpts]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#ThrottleWithOpts
-[Timeout]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Timeout
-[URLFormat]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#URLFormat
-[WithLogEntry]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#WithLogEntry
-[WithValue]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#WithValue
-[Compressor]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#Compressor
-[DefaultLogFormatter]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#DefaultLogFormatter
-[EncoderFunc]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#EncoderFunc
-[HeaderRoute]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#HeaderRoute
-[HeaderRouter]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#HeaderRouter
-[LogEntry]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#LogEntry
-[LogFormatter]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#LogFormatter
-[LoggerInterface]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#LoggerInterface
-[ThrottleOpts]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#ThrottleOpts
-[WrapResponseWriter]: https://pkg.go.dev/github.com/go-bastigo/bastigo/middleware#WrapResponseWriter
+[Throttle]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Throttle
+[ThrottleBacklog]: https://pkg.go.dev/github.com/go-chi/chi/middleware#ThrottleBacklog
+[ThrottleWithOpts]: https://pkg.go.dev/github.com/go-chi/chi/middleware#ThrottleWithOpts
+[Timeout]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Timeout
+[URLFormat]: https://pkg.go.dev/github.com/go-chi/chi/middleware#URLFormat
+[WithLogEntry]: https://pkg.go.dev/github.com/go-chi/chi/middleware#WithLogEntry
+[WithValue]: https://pkg.go.dev/github.com/go-chi/chi/middleware#WithValue
+[Compressor]: https://pkg.go.dev/github.com/go-chi/chi/middleware#Compressor
+[DefaultLogFormatter]: https://pkg.go.dev/github.com/go-chi/chi/middleware#DefaultLogFormatter
+[EncoderFunc]: https://pkg.go.dev/github.com/go-chi/chi/middleware#EncoderFunc
+[HeaderRoute]: https://pkg.go.dev/github.com/go-chi/chi/middleware#HeaderRoute
+[HeaderRouter]: https://pkg.go.dev/github.com/go-chi/chi/middleware#HeaderRouter
+[LogEntry]: https://pkg.go.dev/github.com/go-chi/chi/middleware#LogEntry
+[LogFormatter]: https://pkg.go.dev/github.com/go-chi/chi/middleware#LogFormatter
+[LoggerInterface]: https://pkg.go.dev/github.com/go-chi/chi/middleware#LoggerInterface
+[ThrottleOpts]: https://pkg.go.dev/github.com/go-chi/chi/middleware#ThrottleOpts
+[WrapResponseWriter]: https://pkg.go.dev/github.com/go-chi/chi/middleware#WrapResponseWriter
 
 ### Extra middlewares & packages
 
-Please see https://github.com/go-bastigo for additional packages.
+Please see https://github.com/go-chi for additional packages.
 
 --------------------------------------------------------------------------------------------------------------------
 | package                                            | description                                                 |
 |:---------------------------------------------------|:-------------------------------------------------------------
-| [cors](https://github.com/go-bastigo/cors)             | Cross-origin resource sharing (CORS)                        |
-| [docgen](https://github.com/go-bastigo/docgen)         | Print bastigo.Router routes at runtime                          |
-| [jwtauth](https://github.com/go-bastigo/jwtauth)       | JWT authentication                                          |
-| [hostrouter](https://github.com/go-bastigo/hostrouter) | Domain/host based request routing                           |
-| [httplog](https://github.com/go-bastigo/httplog)       | Small but powerful structured HTTP request logging          |
-| [httprate](https://github.com/go-bastigo/httprate)     | HTTP request rate limiter                                   |
-| [httptracer](https://github.com/go-bastigo/httptracer) | HTTP request performance tracing library                    |
-| [httpvcr](https://github.com/go-bastigo/httpvcr)       | Write deterministic tests for external sources              |
-| [stampede](https://github.com/go-bastigo/stampede)     | HTTP request coalescer                                      |
+| [cors](https://github.com/go-chi/cors)             | Cross-origin resource sharing (CORS)                        |
+| [docgen](https://github.com/go-chi/docgen)         | Print chi.Router routes at runtime                          |
+| [jwtauth](https://github.com/go-chi/jwtauth)       | JWT authentication                                          |
+| [hostrouter](https://github.com/go-chi/hostrouter) | Domain/host based request routing                           |
+| [httplog](https://github.com/go-chi/httplog)       | Small but powerful structured HTTP request logging          |
+| [httprate](https://github.com/go-chi/httprate)     | HTTP request rate limiter                                   |
+| [httptracer](https://github.com/go-chi/httptracer) | HTTP request performance tracing library                    |
+| [httpvcr](https://github.com/go-chi/httpvcr)       | Write deterministic tests for external sources              |
+| [stampede](https://github.com/go-chi/stampede)     | HTTP request coalescer                                      |
 --------------------------------------------------------------------------------------------------------------------
 
 
@@ -468,7 +468,7 @@ how setting context on a request in Go works.
 ## Credits
 
 * Carl Jackson for https://github.com/zenazn/goji
-  * Parts of bastigo's thinking comes from goji, and bastigo's middleware package
+  * Parts of chi's thinking comes from goji, and chi's middleware package
     sources from goji.
 * Armon Dadgar for https://github.com/armon/go-radix
 * Contributions: [@VojtechVitek](https://github.com/VojtechVitek)
@@ -478,8 +478,8 @@ We'll be more than happy to see [your contributions](./CONTRIBUTING.md)!
 
 ## Beyond REST
 
-bastigo is just a http router that lets you decompose request handling into many smaller layers.
-Many companies use bastigo to write REST services for their public APIs. But, REST is just a convention
+chi is just a http router that lets you decompose request handling into many smaller layers.
+Many companies use chi to write REST services for their public APIs. But, REST is just a convention
 for managing state via HTTP, and there's a lot of other pieces required to write a complete client-server
 system or network of microservices.
 
@@ -497,6 +497,6 @@ Copyright (c) 2015-present [Peter Kieltyka](https://github.com/pkieltyka)
 Licensed under [MIT License](./LICENSE)
 
 [GoDoc]: https://pkg.go.dev/github.com/vksssd/bastiGO
-[GoDoc Widget]: https://godoc.org/github.com/go-bastigo/bastigo?status.svg
-[Travis]: https://travis-ci.org/go-bastigo/bastigo
-[Travis Widget]: https://travis-ci.org/go-bastigo/bastigo.svg?branch=master
+[GoDoc Widget]: https://godoc.org/github.com/go-chi/chi?status.svg
+[Travis]: https://travis-ci.org/go-chi/chi
+[Travis Widget]: https://travis-ci.org/go-chi/chi.svg?branch=master
